@@ -72,10 +72,13 @@ const userSchema = new Schema({
                 process.env.JWT_SECRET,
                 { expiresIn: process.env.JWT_EXPIRY, }
             )
+        },
+        comparePassword: async function(plainTextPassword){
+            return await bcrypt.compare(plainTextPassword, this.password);
         }
     }
 
 
-const USer = model('User', userSchema);
+const User = model('User', userSchema);
 
 export default User;

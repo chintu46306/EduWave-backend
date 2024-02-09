@@ -4,6 +4,7 @@ import cookieParser from'cookie-parser';  // Require cookie-parser
 import { config } from 'dotenv';  // Require dotenv
 import morgan from 'morgan';  // Require morgan
 import userRoutes from './routes/user.routes.js';  // Require userRoutes
+import errorMiddleware from './middlewares/error.middleware.js';  // Require errorMiddleware
 config();  // Configure dotenv
 
 
@@ -26,11 +27,12 @@ app.use('/ping', function(req, res){
 });
 
 // routes of 3 models
-app.use('/api/v1/user', userRoutes)
+app.use('/api/v1/user', userRoutes);  // Use userRoutes
 
 app.all('*', (req, res) => {              // this is use when we search wrong url then it will show 404 page not found
     res.status(404).send('OOPS!! 404 page not found');
 });
 
+app.use(errorMiddleware);  // Use errorMiddleware
 
 export  default app;  // Export app
