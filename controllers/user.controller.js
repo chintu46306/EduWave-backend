@@ -223,11 +223,97 @@ const resetPassword = async(req, res, next) => {
     })
 }
 
+const changePassword = async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const { id } = req.user;
+
+    if (!oldPassword || !newPassword) {
+        return next(new AppError('All fields are mandatory', 400));
+    }
+
+    const user = await User.findById(id).select('+password');
+
+    if(!user){
+        return next(new AppError('User does not exist', 400));
+    }
+
+    const isPasswordValid = await user.comparePassword(oldPassword);
+
+    if(!isPasswordValid){
+        return next(new AppError(' invalid old password', 400));
+    }
+
+    user.password = newPassword;
+
+    await user.save();
+
+    user.password = undefined;
+
+    res.status(200).json({
+        success: true,
+        message: 'Password changed successfully',
+        
+    });
+}
+
+const updateUser = async (req, res, next) => {
+    const { fullName } = req.body;
+    const { id } = req.user;
+
+    const user = await User.findById(id);
+
+    if (!user){
+        return next(new AppError('User does not exist', 400));
+    }
+
+    if(req.fullName){
+        user.fullName = fullName;
+    
+    }
+
+    if(req.file){
+        await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+    
+        try {
+            const result = await cloudinary.v2.uploader.upload(req.file.path, {
+              folder: 'EduWave', // Save files in a folder named lms
+              width: 250,
+              height: 250,
+              gravity: 'faces', // This option tells cloudinary to center the image around detected faces (if any) after cropping or resizing the original image
+              crop: 'fill',
+            });
+      
+            // If success
+            if (result) {
+              // Set the public_id and secure_url in DB
+              user.avatar.public_id = result.public_id;
+              user.avatar.secure_url = result.secure_url;
+      
+              // After successful upload remove the file from local storage
+              fs.rm(`uploads/${req.file.filename}`);
+            }
+          } catch (e) {
+            return next(
+              new AppError(e || 'File not uploaded, please try again', 400)
+            );
+        }
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'User details updated successfully',
+    });
+}
+
 export {
     register,
     login,
     logout,
     getProfile,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    changePassword,
+    updateUser
 }
