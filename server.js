@@ -3,6 +3,7 @@ import app from './app.js';  // Require app.js
 import connectionToDB from './config/dbConnection.js';  // Require connectionToDB from dbConnection.js  
 import cloudinary from 'cloudinary';  // Require cloudinary from cloudinary
 
+
 const PORT = process.env.PORT || 5000;  // Set port
 
 // cloudinary configuration

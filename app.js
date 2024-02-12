@@ -5,12 +5,14 @@ import { config } from 'dotenv';  // Require dotenv
 import morgan from 'morgan';  // Require morgan
 import userRoutes from './routes/user.routes.js';  // Require userRoutes
 import errorMiddleware from './middlewares/error.middleware.js';  // Require errorMiddleware
+
 config();  // Configure dotenv
 
 
 const app = express();  // Create express app
 
 app.use(express.json());  // Use express.json()
+app.use(express.urlencoded({ extended : true})); // 
 
 app.use(cors({              // Use cors
     origin: [process.env.FRONTEND_URL],
