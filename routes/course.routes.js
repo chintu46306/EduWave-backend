@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import { createCourse, getAllCourses, getLecturesByCourseId, removeCourse, updateCourse } from '../controllers/course.controller.js';
-import { isLoggedIn } from '../middlewares/auth.middleware.js';
+import { createCourse, getAllCourses, getLecturesByCourseId, removeCourse, updateCourse} from '../controllers/course.controller.js';
+import { authorizeRole, isLoggedIn } from '../middlewares/auth.middleware.js';
 import upload from '../middlewares/multer.middleware.js';
 
 const router = Router();
 
-router.route('/',)
+router.route('/')
     .get(getAllCourses)
     .post(
+        isLoggedIn,
+        authorizeRole('ADMIN'),
         upload.single('thumbnail'),
         createCourse
         );
@@ -16,7 +18,15 @@ router.route('/',)
 
 router.route('/:id')
     .get(isLoggedIn, getLecturesByCourseId)
-    .put(updateCourse)
-    .delete(removeCourse);
+    .put(
+        isLoggedIn,
+        authorizeRole('ADMIN'),
+        updateCourse
+        )
+    .delete(
+        isLoggedIn,
+        authorizeRole('ADMIN'), 
+        removeCourse
+        );
 
 export default router;
