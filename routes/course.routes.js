@@ -5,7 +5,8 @@ import upload from '../middlewares/multer.middleware.js';
 
 const router = Router();
 
-router.route('/')
+router
+    .route('/')
     .get(getAllCourses)
     .post(
         isLoggedIn,
@@ -16,7 +17,8 @@ router.route('/')
   //  .put(updateCourse)
   //  .delete(removeCourse)
 
-router.route('/:id')
+router
+    .route('/:id')
     .get(isLoggedIn, getLecturesByCourseId)
     .put(
         isLoggedIn,

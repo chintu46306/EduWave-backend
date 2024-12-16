@@ -8,11 +8,11 @@ const router = Router();  // Create router
 
 router.post('/register', upload.single("avatar"), register);
 router.post('/login', login);
-router.get('/logout', logout);
+router.post('/logout', logout);
 router.get('/me', isLoggedIn, getProfile);
 router.post('/reset',forgotPassword);
 router.post('/reset/:resetToken',resetPassword);
 router.post('/change-password', isLoggedIn, changePassword);
-router.put('/update', isLoggedIn, upload.single("avatar"), updateUser);
+router.put('/update/:id', isLoggedIn, upload.single("avatar"), updateUser);
 
 export default router;  // Export router
