@@ -17,7 +17,7 @@ app.use(express.json());  // Use express.json()
 app.use(express.urlencoded({ extended : true})); // 
 
 app.use(cors({              // Use cors
-    origin: [process.env.FRONTEND_URL],
+    origin: ["https://edu-wave-frontend.vercel.app"],
     credentials: true,
 }));   
 
