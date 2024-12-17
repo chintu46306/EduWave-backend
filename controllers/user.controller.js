@@ -8,7 +8,8 @@ import crypto from 'crypto';
 const cookieOptions = {
     maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production' ? true : false
+    secure: process.env.NODE_ENV === 'production' ? true : false,
+    sameSite: "none"
 }
 
 const register = async (req, res, next) =>{
@@ -266,7 +267,7 @@ const updateUser = async (req, res, next) => {
         return next(new AppError('User does not exist', 400));
     }
 
-    if(req.fullName){
+    if(fullName){
         user.fullName = fullName;
     
     }
@@ -306,6 +307,7 @@ const updateUser = async (req, res, next) => {
         message: 'User details updated successfully',
     });
 }
+  
 
 export {
     register,
